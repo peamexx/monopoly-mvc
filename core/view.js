@@ -1,6 +1,7 @@
 const view = (function () {
     const diceBtn = document.querySelector('.dice-btn');
     const player = document.querySelector('.player');
+    const tooltip = document.querySelector('.player .tooltip');
 
     function bind(type, handler) {
         if (type == 'dice') {
@@ -10,6 +11,24 @@ const view = (function () {
             })
         };
     };
+
+    async function speak(playerData) {
+        return new Promise((res, rej) => {
+            tooltip.textContent = playerData.dice + ' steps forward..!';
+            if (playerData.isGoalIn) {
+                tooltip.textContent = tooltip.textContent + ' The destination is just around the corner.';
+            }
+            tooltip.style.animation = 'fadeIn 2s';
+
+            setTimeout(() => {
+                tooltip.style.animation = 'fadeOut 2s';
+            }, 2000);
+
+            setTimeout(() => {
+                res();
+            }, 4000);
+        })
+    }
 
     async function movePlayer(route, playerData) {
         if (!route || route.length == 0) {
@@ -80,6 +99,7 @@ const view = (function () {
 
     return {
         bind,
+        speak,
         movePlayer,
     }
 })();
